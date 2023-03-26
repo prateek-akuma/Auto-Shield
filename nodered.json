@@ -1,0 +1,1348 @@
+[
+    {
+        "id": "d9db241dd68f258e",
+        "type": "tab",
+        "label": "Flow 5",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "fb06715e4a2df1d8",
+        "type": "camerapi-takephoto",
+        "z": "d9db241dd68f258e",
+        "filemode": "0",
+        "filename": "prateeek",
+        "filedefpath": "1",
+        "filepath": "",
+        "fileformat": "jpeg",
+        "resolution": "3",
+        "rotation": "0",
+        "fliph": "0",
+        "flipv": "0",
+        "brightness": "50",
+        "contrast": "0",
+        "sharpness": "0",
+        "quality": "80",
+        "imageeffect": "none",
+        "exposuremode": "auto",
+        "iso": "0",
+        "agcwait": "1.0",
+        "led": "0",
+        "awb": "auto",
+        "name": "",
+        "x": 360,
+        "y": 320,
+        "wires": [
+            [
+                "1b0326afcc09c433",
+                "727da4537f0a2f5d",
+                "53384b18bdf4daae",
+                "bc1880a588e45ade"
+            ]
+        ]
+    },
+    {
+        "id": "d739f7d9459b011c",
+        "type": "grove digital sensor",
+        "z": "d9db241dd68f258e",
+        "name": "Distance",
+        "board": "427892755834c23e",
+        "sensor": "ultrasonic",
+        "repeat": "2",
+        "pin": "5",
+        "x": 140,
+        "y": 440,
+        "wires": [
+            [
+                "8f5cf1f258578074",
+                "f3fbec243aed708d"
+            ]
+        ]
+    },
+    {
+        "id": "f3fbec243aed708d",
+        "type": "function",
+        "z": "d9db241dd68f258e",
+        "name": "function 39",
+        "func": "var count = flow.get('count') || false;\nif(msg.pay==true){\n    count=true;\n}\nflow.set('count', count);\nif (msg.payload<30 && count==false){\n    msg.payload=1\n    return msg;\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 420,
+        "wires": [
+            [
+                "fb06715e4a2df1d8",
+                "0cf2eaf3741a31b2"
+            ]
+        ]
+    },
+    {
+        "id": "93a2b1c3930d571b",
+        "type": "debug",
+        "z": "d9db241dd68f258e",
+        "name": "debug 40",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload[\"predictions\"][0]",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 980,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "fa488882242dc203",
+        "type": "http request",
+        "z": "d9db241dd68f258e",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://userauth-prediction.cognitiveservices.azure.com/customvision/v3.0/Prediction/e4dab08b-bad9-41f0-a7cb-19f172fa8d70/classify/iterations/Iteration3/image",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "basic",
+        "senderr": false,
+        "headers": [],
+        "x": 870,
+        "y": 320,
+        "wires": [
+            [
+                "93a2b1c3930d571b",
+                "22b73bd5f4047e11",
+                "1bfac0b014930162"
+            ]
+        ]
+    },
+    {
+        "id": "1b0326afcc09c433",
+        "type": "function",
+        "z": "d9db241dd68f258e",
+        "name": "setHeaders",
+        "func": "msg.headers = {};\nmsg.headers['Content-Type'] = 'application/octet-stream';\nmsg.headers['Prediction-Key'] = '41131926c8bf405c9a0afd831b47bf2c';\nreturn msg; ",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 320,
+        "wires": [
+            [
+                "fa488882242dc203"
+            ]
+        ]
+    },
+    {
+        "id": "22b73bd5f4047e11",
+        "type": "function",
+        "z": "d9db241dd68f258e",
+        "name": "function 40",
+        "func": "if ((msg.payload[\"predictions\"][0]['tagName'] == 'Authenticated')){\n    msg.pay=true;\n    return msg;\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 990,
+        "y": 480,
+        "wires": [
+            [
+                "f3fbec243aed708d",
+                "8ff59d1b7b8d1397",
+                "b10d66553a085df4"
+            ]
+        ]
+    },
+    {
+        "id": "0cf2eaf3741a31b2",
+        "type": "debug",
+        "z": "d9db241dd68f258e",
+        "name": "debug 39",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 620,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "727da4537f0a2f5d",
+        "type": "image",
+        "z": "d9db241dd68f258e",
+        "name": "",
+        "width": 160,
+        "data": "payload",
+        "dataType": "msg",
+        "thumbnail": false,
+        "active": true,
+        "pass": false,
+        "outputs": 0,
+        "x": 660,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "8ff59d1b7b8d1397",
+        "type": "PlaySound",
+        "z": "d9db241dd68f258e",
+        "name": "",
+        "playerOptions": "{}",
+        "audioURI": "/home/pi/Desktop/car/car_start.mp3",
+        "options": "{}",
+        "x": 1170,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1bfac0b014930162",
+        "type": "function",
+        "z": "d9db241dd68f258e",
+        "name": "function 50",
+        "func": "if ((msg.payload[\"predictions\"][0]['tagName'] == 'Negative')) {\n    msg.payload = \"Someone unauthorized has entered your car\";\n    return msg;\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1070,
+        "y": 320,
+        "wires": [
+            [
+                "e542663cf28adb2f",
+                "ef03414715c98af7",
+                "c938eaa4ce021756"
+            ]
+        ]
+    },
+    {
+        "id": "5edcb83bc3b55833",
+        "type": "function",
+        "z": "d9db241dd68f258e",
+        "name": "function 51",
+        "func": "msg.payload={'UnAuthorized':1,\n'lat':msg.payload['lat'],\n'lon':msg.payload['lon'],\n    'Engine': 'OFF'}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1490,
+        "y": 340,
+        "wires": [
+            [
+                "80f2c28ed221579d",
+                "c8fdc99b6ab7f1a3"
+            ]
+        ]
+    },
+    {
+        "id": "80f2c28ed221579d",
+        "type": "influxdb out",
+        "z": "d9db241dd68f258e",
+        "influxdb": "9f279912cf906ca2",
+        "name": "",
+        "measurement": "demo",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "organisation",
+        "bucket": "bucket",
+        "x": 1690,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "23944184062ad3b8",
+        "type": "function",
+        "z": "d9db241dd68f258e",
+        "name": "function 52",
+        "func": "msg.payload = {\n    'UnAuthorized': 0,\n    'lat': msg.payload['lat'],\n    'lon': msg.payload['lon'],\n    'Engine':'ON'\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1510,
+        "y": 500,
+        "wires": [
+            [
+                "80f2c28ed221579d",
+                "fb5bbc3dd5c72494"
+            ]
+        ]
+    },
+    {
+        "id": "e542663cf28adb2f",
+        "type": "http request",
+        "z": "d9db241dd68f258e",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://ip-api.com/json  ",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1290,
+        "y": 340,
+        "wires": [
+            [
+                "5edcb83bc3b55833"
+            ]
+        ]
+    },
+    {
+        "id": "b10d66553a085df4",
+        "type": "http request",
+        "z": "d9db241dd68f258e",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://ip-api.com/json  ",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1290,
+        "y": 500,
+        "wires": [
+            [
+                "23944184062ad3b8"
+            ]
+        ]
+    },
+    {
+        "id": "53384b18bdf4daae",
+        "type": "file",
+        "z": "d9db241dd68f258e",
+        "name": "",
+        "filename": "/usr/share/grafana/public/images/user.jpg",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 640,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5ca5236e947282e5",
+        "type": "function",
+        "z": "d9db241dd68f258e",
+        "name": "function 53",
+        "func": "msg.payload={'binary':msg.payload}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 810,
+        "y": 80,
+        "wires": [
+            [
+                "0193d29978063dcb"
+            ]
+        ]
+    },
+    {
+        "id": "bc1880a588e45ade",
+        "type": "base64",
+        "z": "d9db241dd68f258e",
+        "name": "",
+        "action": "",
+        "property": "payload",
+        "x": 520,
+        "y": 100,
+        "wires": [
+            [
+                "5ca5236e947282e5"
+            ]
+        ]
+    },
+    {
+        "id": "0193d29978063dcb",
+        "type": "influxdb out",
+        "z": "d9db241dd68f258e",
+        "influxdb": "9f279912cf906ca2",
+        "name": "",
+        "measurement": "images",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "organisation",
+        "bucket": "bucket",
+        "x": 1110,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "c5f79bf5c9f6f6b7",
+        "type": "camerapi-takephoto",
+        "z": "d9db241dd68f258e",
+        "filemode": "0",
+        "filename": "",
+        "filedefpath": "1",
+        "filepath": "",
+        "fileformat": "jpeg",
+        "resolution": "8",
+        "rotation": "0",
+        "fliph": "0",
+        "flipv": "0",
+        "brightness": "50",
+        "contrast": "0",
+        "sharpness": "0",
+        "quality": "80",
+        "imageeffect": "none",
+        "exposuremode": "auto",
+        "iso": "0",
+        "agcwait": "1.0",
+        "led": "0",
+        "awb": "auto",
+        "name": "",
+        "x": 580,
+        "y": 900,
+        "wires": [
+            [
+                "335be6805f86491b",
+                "afa05f08f1a29122",
+                "74c238ddfe248fad"
+            ]
+        ]
+    },
+    {
+        "id": "335be6805f86491b",
+        "type": "function",
+        "z": "d9db241dd68f258e",
+        "name": "setHeaders",
+        "func": "msg.headers = {};\nmsg.headers['Content-Type'] = 'application/octet-stream';\nmsg.headers['Prediction-Key'] = '4056cf64787249bfa3f96ab78d265153';\nreturn msg; ",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 900,
+        "wires": [
+            [
+                "2fc1acf9c51d99ef"
+            ]
+        ]
+    },
+    {
+        "id": "2fc1acf9c51d99ef",
+        "type": "http request",
+        "z": "d9db241dd68f258e",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://fatigue-prediction.cognitiveservices.azure.com/customvision/v3.0/Prediction/572bd4e3-990e-4b18-a827-69bf54e2302a/classify/iterations/Iteration3/image",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "basic",
+        "senderr": false,
+        "headers": [],
+        "x": 1090,
+        "y": 820,
+        "wires": [
+            [
+                "86d95b5993278b7d",
+                "efbad257e66ee015"
+            ]
+        ]
+    },
+    {
+        "id": "afa05f08f1a29122",
+        "type": "image",
+        "z": "d9db241dd68f258e",
+        "name": "",
+        "width": 160,
+        "data": "payload",
+        "dataType": "msg",
+        "thumbnail": false,
+        "active": true,
+        "pass": false,
+        "outputs": 0,
+        "x": 780,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "74c238ddfe248fad",
+        "type": "file",
+        "z": "d9db241dd68f258e",
+        "name": "",
+        "filename": "/home/pi/Desktop/car/user.png",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 590,
+        "y": 1040,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "70ee25b5bc6c6887",
+        "type": "inject",
+        "z": "d9db241dd68f258e",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "2",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 210,
+        "y": 900,
+        "wires": [
+            [
+                "211ae85790b7359a"
+            ]
+        ]
+    },
+    {
+        "id": "86d95b5993278b7d",
+        "type": "debug",
+        "z": "d9db241dd68f258e",
+        "name": "debug 59",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload['predictions'][0]['tagName']",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1220,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "1b86488a688c6508",
+        "type": "function",
+        "z": "d9db241dd68f258e",
+        "name": "function 56",
+        "func": "msg.prev = 3;\nvar co=context.get('co') || 0;\nif (msg.payload == 0) {\n    co = co + 1;\n    context.set('co', co);\n}\nelse {\n    if (co>=3){\n        msg.prev=1;\n        \n    }\n    co = 0;\n    msg.payload = 0;\n    context.set('co', co);\n    return msg;\n}\nif (co>=3){\n    msg.payload=1;\n    msg.prev = 0;\n    return msg;\n}\n\ncontext.set('co',co);\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 890,
+        "y": 1080,
+        "wires": [
+            [
+                "47edbdcfe56927c6",
+                "d83336f1508aa264",
+                "c9c5d5d6487516fc",
+                "3b5853f5e753aadb"
+            ]
+        ]
+    },
+    {
+        "id": "efbad257e66ee015",
+        "type": "function",
+        "z": "d9db241dd68f258e",
+        "name": "function 57",
+        "func": "if (msg.payload['predictions'][0]['tagName']=='asleep'){\n    msg.payload=0;\n}\nelse{\n    msg.payload=1;\n}\nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 890,
+        "y": 1000,
+        "wires": [
+            [
+                "1b86488a688c6508",
+                "b9b014ee15789a2d"
+            ]
+        ]
+    },
+    {
+        "id": "b9b014ee15789a2d",
+        "type": "debug",
+        "z": "d9db241dd68f258e",
+        "name": "debug 60",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1040,
+        "y": 960,
+        "wires": []
+    },
+    {
+        "id": "47edbdcfe56927c6",
+        "type": "debug",
+        "z": "d9db241dd68f258e",
+        "name": "debug 61",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1060,
+        "y": 1040,
+        "wires": []
+    },
+    {
+        "id": "d83336f1508aa264",
+        "type": "function",
+        "z": "d9db241dd68f258e",
+        "name": "function 58",
+        "func": "if (msg.payload==1){\n    msg.payload=\" Stay ALERT!!!\"\n    return msg;\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1030,
+        "y": 1140,
+        "wires": [
+            [
+                "1adb28548e384a6d"
+            ]
+        ]
+    },
+    {
+        "id": "1adb28548e384a6d",
+        "type": "play audio",
+        "z": "d9db241dd68f258e",
+        "name": "",
+        "voice": "",
+        "x": 1210,
+        "y": 1140,
+        "wires": []
+    },
+    {
+        "id": "c9c5d5d6487516fc",
+        "type": "debug",
+        "z": "d9db241dd68f258e",
+        "name": "debug 62",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "prev",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1100,
+        "y": 1080,
+        "wires": []
+    },
+    {
+        "id": "3b5853f5e753aadb",
+        "type": "function",
+        "z": "d9db241dd68f258e",
+        "name": "function 59",
+        "func": "if(msg.prev==1){\n    msg.payload={\n        'sleep-driving':1\n    }\n    return msg;\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 990,
+        "y": 1200,
+        "wires": [
+            [
+                "f6e4f3cb58c5df3e",
+                "8b1246285d56c908"
+            ]
+        ]
+    },
+    {
+        "id": "f6e4f3cb58c5df3e",
+        "type": "influxdb out",
+        "z": "d9db241dd68f258e",
+        "influxdb": "9f279912cf906ca2",
+        "name": "",
+        "measurement": "DM1",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "organisation",
+        "bucket": "bucket",
+        "x": 1200,
+        "y": 1200,
+        "wires": []
+    },
+    {
+        "id": "211ae85790b7359a",
+        "type": "function",
+        "z": "d9db241dd68f258e",
+        "name": "function 60",
+        "func": "var count = flow.get('count') || false;\nif (count==true){\n    return msg;\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 900,
+        "wires": [
+            [
+                "c5f79bf5c9f6f6b7"
+            ]
+        ]
+    },
+    {
+        "id": "ef03414715c98af7",
+        "type": "PlaySound",
+        "z": "d9db241dd68f258e",
+        "name": "",
+        "playerOptions": "{}",
+        "audioURI": "/home/pi/Desktop/car/lock.mp3",
+        "options": "{}",
+        "x": 1310,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "24d1ded0134cd283",
+        "type": "grove analog sensor",
+        "z": "d9db241dd68f258e",
+        "name": "",
+        "pin": "2",
+        "sensor": "sound",
+        "repeat": "2",
+        "board": "427892755834c23e",
+        "x": 170,
+        "y": 1220,
+        "wires": [
+            [
+                "7541d51553550c06",
+                "46c623a436ffae51"
+            ]
+        ]
+    },
+    {
+        "id": "f36ee9b277c8fb13",
+        "type": "range",
+        "z": "d9db241dd68f258e",
+        "minin": "0",
+        "maxin": "1023",
+        "minout": "0",
+        "maxout": "180",
+        "action": "scale",
+        "round": true,
+        "property": "payload",
+        "name": "",
+        "x": 660,
+        "y": 1300,
+        "wires": [
+            [
+                "e8043597fa19673a",
+                "db42a1045f1db57c",
+                "5b514569a7572d6f"
+            ]
+        ]
+    },
+    {
+        "id": "46c623a436ffae51",
+        "type": "function",
+        "z": "d9db241dd68f258e",
+        "name": "function 61",
+        "func": "var count = flow.get('count') || false;\nif (count==true){\n    return msg;\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 1300,
+        "wires": [
+            [
+                "f36ee9b277c8fb13"
+            ]
+        ]
+    },
+    {
+        "id": "fe0bb68a9fd1177e",
+        "type": "influxdb out",
+        "z": "d9db241dd68f258e",
+        "influxdb": "9f279912cf906ca2",
+        "name": "",
+        "measurement": "speed",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "organisation",
+        "bucket": "bucket",
+        "x": 1110,
+        "y": 1300,
+        "wires": []
+    },
+    {
+        "id": "e8043597fa19673a",
+        "type": "function",
+        "z": "d9db241dd68f258e",
+        "name": "function 62",
+        "func": "msg.payload={\n    'speed':msg.payload\n }\nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 870,
+        "y": 1300,
+        "wires": [
+            [
+                "fe0bb68a9fd1177e"
+            ]
+        ]
+    },
+    {
+        "id": "ee3c157fe9e5bc2f",
+        "type": "azureiotdevice",
+        "z": "d9db241dd68f258e",
+        "deviceid": "default",
+        "pnpModelid": "",
+        "connectiontype": "dps",
+        "authenticationmethod": "sas",
+        "iothub": "tcss573-asp109.azure-devices.net",
+        "isIotcentral": true,
+        "scopeid": "0ne00979EED",
+        "enrollmenttype": "device",
+        "saskey": "/2hif6wheFkLurP9tNYq3K8w647YJ5GYJsyLswnh44I=",
+        "certname": "",
+        "keyname": "",
+        "passphrase": "",
+        "protocol": "mqtt",
+        "retryInterval": 10,
+        "methods": [],
+        "DPSpayload": "",
+        "gatewayHostname": "",
+        "caname": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "x": 1980,
+        "y": 860,
+        "wires": [
+            [
+                "73e616ca7eef86fb"
+            ]
+        ]
+    },
+    {
+        "id": "c8fdc99b6ab7f1a3",
+        "type": "function",
+        "z": "d9db241dd68f258e",
+        "name": "function 64",
+        "func": "msg.topic = 'telemetry';\nmsg.payload = {'Authorized':\"NO\"}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1710,
+        "y": 340,
+        "wires": [
+            [
+                "ee3c157fe9e5bc2f"
+            ]
+        ]
+    },
+    {
+        "id": "fb5bbc3dd5c72494",
+        "type": "function",
+        "z": "d9db241dd68f258e",
+        "name": "function 65",
+        "func": "msg.topic = 'telemetry';\nmsg.payload = {'Authorized':\"YES\"};\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1730,
+        "y": 540,
+        "wires": [
+            [
+                "ee3c157fe9e5bc2f"
+            ]
+        ]
+    },
+    {
+        "id": "73e616ca7eef86fb",
+        "type": "debug",
+        "z": "d9db241dd68f258e",
+        "name": "debug 64",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2200,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "db42a1045f1db57c",
+        "type": "function",
+        "z": "d9db241dd68f258e",
+        "name": "function 66",
+        "func": "msg.topic=\"telemetry\"\nmsg.payload={\n    'speed':msg.payload\n }\nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1370,
+        "y": 1420,
+        "wires": [
+            [
+                "ee3c157fe9e5bc2f"
+            ]
+        ]
+    },
+    {
+        "id": "e275041e876baef5",
+        "type": "influxdb in",
+        "z": "d9db241dd68f258e",
+        "influxdb": "9f279912cf906ca2",
+        "name": "",
+        "query": "SELECT count(\"slept\") FROM (SELECT count(\"sleep-driving\") AS \"slept\" FROM \"DM1\" GROUP BY time(1h)) WHERE \"slept\">0",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "organisation",
+        "x": 690,
+        "y": 1860,
+        "wires": [
+            [
+                "0d5afced7ebf4628"
+            ]
+        ]
+    },
+    {
+        "id": "cee49dd28b32828c",
+        "type": "inject",
+        "z": "d9db241dd68f258e",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "3600",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 430,
+        "y": 1940,
+        "wires": [
+            [
+                "e275041e876baef5",
+                "8480f21ac42b0dca"
+            ]
+        ]
+    },
+    {
+        "id": "8480f21ac42b0dca",
+        "type": "influxdb in",
+        "z": "d9db241dd68f258e",
+        "influxdb": "9f279912cf906ca2",
+        "name": "",
+        "query": "SELECT count(\"avg\") FROM (SELECT mean(\"speed\") AS \"avg\" FROM \"speed\" GROUP BY time(5m)) WHERE \"avg\">40",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "organisation",
+        "x": 670,
+        "y": 2040,
+        "wires": [
+            [
+                "deb755fd6f27735f"
+            ]
+        ]
+    },
+    {
+        "id": "8f607bad033116dd",
+        "type": "debug",
+        "z": "d9db241dd68f258e",
+        "name": "debug 66",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1220,
+        "y": 1860,
+        "wires": []
+    },
+    {
+        "id": "0d5afced7ebf4628",
+        "type": "function",
+        "z": "d9db241dd68f258e",
+        "name": "function 67",
+        "func": "var sleep=msg.payload[0]['count']*0.2;\nflow.set('sleep',sleep);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 910,
+        "y": 1840,
+        "wires": [
+            [
+                "60eb657f13389ef9"
+            ]
+        ]
+    },
+    {
+        "id": "deb755fd6f27735f",
+        "type": "function",
+        "z": "d9db241dd68f258e",
+        "name": "function 68",
+        "func": "var drive = msg.payload[0]['count'] * 0.4;\nflow.set('drive', drive);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 930,
+        "y": 2040,
+        "wires": [
+            [
+                "60eb657f13389ef9"
+            ]
+        ]
+    },
+    {
+        "id": "60eb657f13389ef9",
+        "type": "function",
+        "z": "d9db241dd68f258e",
+        "name": "function 69",
+        "func": "var sleep= flow.get('sleep')||0;\nvar drive = flow.get('drive') || 0;\nif (((sleep+drive)*10)%10>=5){\n    var speedc=Math.floor(sleep + drive)+0.5;\n    if(speedc==0.5){\n        msg.payload={\n            'speed':speedc,\n            'insurance':60\n        }\n    }\n    if (speedc == 1.5) {\n        msg.payload = {\n            'speed': speedc,\n            'insurance': 100\n        }\n    }\n    if (speedc== 2.5) {\n        msg.payload = {\n            'speed': speedc,\n            'insurance': 130\n        }\n    }\n    if (speedc== 3.5) {\n        msg.payload = {\n            'speed': speedc,\n            'insurance': 160\n        }\n    }\n    if (speedc == 4.5) {\n        msg.payload = {\n            'speed': speedc,\n            'insurance': 200\n        }\n    }\n}\nelse{\n    var speedc = Math.floor(sleep + drive);\n    if (speedc == 0) {\n        msg.payload = {\n            'speed': speedc,\n            'insurance': 40\n        }\n    }\n    if (speedc== 1) {\n        msg.payload = {\n            'speed': speedc,\n            'insurance': 60\n        }\n    }\n    if (speedc== 2) {\n        msg.payload = {\n            'speed': speedc,\n            'insurance': 115\n        }\n    }\n    if (speedc == 3) {\n        msg.payload = {\n            'speed': speedc,\n            'insurance': 150\n        }\n    }\n    if (speedc == 4) {\n        msg.payload = {\n            'speed': speedc,\n            'insurance': 180\n        }\n    }\n    if (speedc == 5) {\n        msg.payload = {\n            'speed': speedc,\n            'insurance': 250\n        }\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1030,
+        "y": 1940,
+        "wires": [
+            [
+                "8f607bad033116dd",
+                "174e51ec0b147eb1"
+            ]
+        ]
+    },
+    {
+        "id": "174e51ec0b147eb1",
+        "type": "influxdb out",
+        "z": "d9db241dd68f258e",
+        "influxdb": "9f279912cf906ca2",
+        "name": "",
+        "measurement": "starinsurance",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "organisation",
+        "bucket": "bucket",
+        "x": 1310,
+        "y": 1960,
+        "wires": []
+    },
+    {
+        "id": "8b1246285d56c908",
+        "type": "function",
+        "z": "d9db241dd68f258e",
+        "name": "function 70",
+        "func": "msg.topic='telemetry'\nmsg.payload = {\n    'sleepdriving': 1\n}\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1330,
+        "y": 1240,
+        "wires": [
+            [
+                "ee3c157fe9e5bc2f"
+            ]
+        ]
+    },
+    {
+        "id": "a6eed17e3ef24b45",
+        "type": "debug",
+        "z": "d9db241dd68f258e",
+        "name": "debug 63",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1680,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "39e20e1f61082af2",
+        "type": "ui_button",
+        "z": "d9db241dd68f258e",
+        "name": "",
+        "group": "e4312bcbd6886b10",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "label": "STOP",
+        "tooltip": "",
+        "color": "red",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "Stop",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 1270,
+        "y": 700,
+        "wires": [
+            [
+                "6cc03e0f08b26ecf",
+                "4712743ff10e2195"
+            ]
+        ]
+    },
+    {
+        "id": "6cc03e0f08b26ecf",
+        "type": "PlaySound",
+        "z": "d9db241dd68f258e",
+        "name": "",
+        "playerOptions": "{}",
+        "audioURI": "/home/pi/Desktop/car/car_stop.mp3",
+        "options": "{}",
+        "x": 1590,
+        "y": 760,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4712743ff10e2195",
+        "type": "function",
+        "z": "d9db241dd68f258e",
+        "name": "function 63",
+        "func": "var count = flow.get('count') || false;\ncount=false;\nflow.set('count',count);\nmsg.payload={'Engine': \"OFF\"}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1530,
+        "y": 600,
+        "wires": [
+            [
+                "a6eed17e3ef24b45",
+                "80f2c28ed221579d"
+            ]
+        ]
+    },
+    {
+        "id": "8f5cf1f258578074",
+        "type": "debug",
+        "z": "d9db241dd68f258e",
+        "name": "debug 67",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 260,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "7541d51553550c06",
+        "type": "debug",
+        "z": "d9db241dd68f258e",
+        "name": "debug 68",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 480,
+        "y": 1180,
+        "wires": []
+    },
+    {
+        "id": "5b514569a7572d6f",
+        "type": "function",
+        "z": "d9db241dd68f258e",
+        "name": "function 71",
+        "func": "if(msg.payload>40)\n{\n    msg.payload=\"Drive Slowly, you are crossing speed limit\"\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 930,
+        "y": 1480,
+        "wires": [
+            [
+                "baad243147e9812f"
+            ]
+        ]
+    },
+    {
+        "id": "baad243147e9812f",
+        "type": "play audio",
+        "z": "d9db241dd68f258e",
+        "name": "",
+        "voice": "",
+        "x": 1150,
+        "y": 1480,
+        "wires": []
+    },
+    {
+        "id": "233d3a9df9c63775",
+        "type": "e-mail",
+        "z": "d9db241dd68f258e",
+        "server": "mail.gmx.com",
+        "port": "465",
+        "secure": true,
+        "tls": true,
+        "name": "liveankitkadian@gmail.com",
+        "dname": "",
+        "x": 1640,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "c938eaa4ce021756",
+        "type": "function",
+        "z": "d9db241dd68f258e",
+        "name": "function 72",
+        "func": "\nmsg.payload=\"Intruder in your car, Check DashBoard for Car Location!!!\"\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1360,
+        "y": 260,
+        "wires": [
+            [
+                "233d3a9df9c63775"
+            ]
+        ]
+    },
+    {
+        "id": "427892755834c23e",
+        "type": "board-config",
+        "board": "GrovePi"
+    },
+    {
+        "id": "9f279912cf906ca2",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "smartphone",
+        "name": "influx",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "1.x",
+        "url": "http://localhost:8086",
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "e4312bcbd6886b10",
+        "type": "ui_group",
+        "name": "CAR Engine OFF",
+        "tab": "28a1fa5423daa956",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "28a1fa5423daa956",
+        "type": "ui_tab",
+        "name": "CAR",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
